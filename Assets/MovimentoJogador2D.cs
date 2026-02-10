@@ -9,10 +9,12 @@ public class MovimentoJogador2D : MonoBehaviour
     // ===== PULO =====
     public float forcaPulo = 10f;
     private bool estaNoChao;
+    private bool puloDuplo;
 
     // ===== DASH =====
     public float forcaDash = 12f;
     private bool podeDarDash = true;
+    private bool estaDandoDash;
 
     // ===== RAYCAST DO CHÃO =====
     public Transform pontoDoChao;
@@ -41,20 +43,36 @@ public class MovimentoJogador2D : MonoBehaviour
         {
             corpo.linearVelocity = new Vector2(corpo.linearVelocity.x, forcaPulo);
         }
+        else if (Input.GetKeyDown(KeyCode.Space) && !estaNoChao && !puloDuplo)
+        {
+            corpo.linearVelocity = new Vector2(corpo.linearVelocity.x, forcaPulo);
+            puloDuplo = true; // Marca que o pulo duplo foi usado
+        }
 
         // Dash
         if (Input.GetKeyDown(KeyCode.LeftShift) && podeDarDash)
         {
-            corpo.linearVelocity = new Vector2(direcao * forcaDash, corpo.linearVelocity.y);
+            corpo.linearVelocity = new Vector2(direcao * forcaDash, 0f);
+            estaDandoDash = true;
             podeDarDash = false;
+
+            Invoke("PararDash", 0.15f); // Tempo curto do dash
         }
+    }
+
+    void PararDash()
+    {
+        estaDandoDash = false;
     }
 
     void FixedUpdate()
     {
+        // Se estiver dando dash, não aplica movimento normal
+        if (estaDandoDash) return;
+
         // Movimento horizontal
         corpo.linearVelocity = new Vector2(direcao * velocidade, corpo.linearVelocity.y);
-    }
+    }  
 
     void VerificarChao()
     {
@@ -71,6 +89,7 @@ public class MovimentoJogador2D : MonoBehaviour
         {
             estaNoChao = true;
             podeDarDash = true; // Libera o dash ao tocar o chão
+            puloDuplo = false; // Reseta o pulo duplo ao tocar o chão
         }
         else
         {
