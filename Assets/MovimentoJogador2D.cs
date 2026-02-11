@@ -9,7 +9,8 @@ public class MovimentoJogador2D : MonoBehaviour
     // ===== PULO =====
     public float forcaPulo = 10f;
     private bool estaNoChao;
-    private bool puloDuplo;
+    private bool puloDuplo; // Marca se o pulo duplo já foi usado
+    private bool emSuperficieQueNaoPodePular; // Marca se está em superfície que não permite pular
 
     // ===== DASH =====
     public float forcaDash = 12f;
@@ -43,7 +44,8 @@ public class MovimentoJogador2D : MonoBehaviour
         {
             corpo.linearVelocity = new Vector2(corpo.linearVelocity.x, forcaPulo);
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && !estaNoChao && !puloDuplo)
+        // Ele não está no chão, mas ainda não usou o pulo duplo e a superfície permite pular
+        else if (Input.GetKeyDown(KeyCode.Space) && estaNoChao == false && puloDuplo == false && emSuperficieQueNaoPodePular == false)
         {
             corpo.linearVelocity = new Vector2(corpo.linearVelocity.x, forcaPulo);
             puloDuplo = true; // Marca que o pulo duplo foi usado
@@ -87,9 +89,20 @@ public class MovimentoJogador2D : MonoBehaviour
         // Se o raio encostou em algo da camada do chão
         if (hit.collider != null)
         {
-            estaNoChao = true;
-            podeDarDash = true; // Libera o dash ao tocar o chão
-            puloDuplo = false; // Reseta o pulo duplo ao tocar o chão
+            // Só considera chão se a TAG for "Chão"
+            if (hit.collider.CompareTag("Chao"))
+            {
+                estaNoChao = true;
+                podeDarDash = true;
+                puloDuplo = false;
+                emSuperficieQueNaoPodePular = false;
+            }
+            else
+            {
+                // Encostou em algo que não é "Chão"
+                estaNoChao = false;
+                emSuperficieQueNaoPodePular = true;
+            }
         }
         else
         {
