@@ -25,6 +25,9 @@ public class MovimentoJogador2D : MonoBehaviour
     // ===== COMPONENTES =====
     private Rigidbody2D corpo;
 
+    // ===== LIMITES DO MAPA =====
+    public BoxCollider2D limiteMapa;
+
     void Start()
     {
         // Pega o Rigidbody2D do jogador
@@ -74,6 +77,9 @@ public class MovimentoJogador2D : MonoBehaviour
 
         // Movimento horizontal
         corpo.linearVelocity = new Vector2(direcao * velocidade, corpo.linearVelocity.y);
+
+        // Bloqueio por limite
+        corpo.linearVelocity = LimitarJogadorAoMapa(corpo.linearVelocity);
     }  
 
     void VerificarChao()
@@ -121,5 +127,32 @@ public class MovimentoJogador2D : MonoBehaviour
                 pontoDoChao.position + Vector3.down * distanciaDoChao
             );
         }
+    }
+
+    // Limita o jogador dentro dos limites do mapa, considerando o tamanho do collider
+    Vector2 LimitarJogadorAoMapa(Vector2 vel)
+    {
+        // Obtém os limites do mapa e do jogador
+        Bounds boundsMapa = limiteMapa.bounds;
+        // O bounds do jogador é baseado no collider, então pega o collider do jogador
+        Bounds boundsPlayer = GetComponent<Collider2D>().bounds;
+        // Posição atual do jogador
+        Vector2 posicaoAtualPlayer = corpo.position;
+
+        // Limites reais do player
+        float minX = boundsMapa.min.x + boundsPlayer.extents.x;
+        float maxX = boundsMapa.max.x - boundsPlayer.extents.x;
+        float minY = boundsMapa.min.y + boundsPlayer.extents.y;
+        float maxY = boundsMapa.max.y - boundsPlayer.extents.y;
+
+        // Tentativa de sair no eixo X
+        if ((posicaoAtualPlayer.x <= minX && vel.x < 0) || (posicaoAtualPlayer.x >= maxX && vel.x > 0))
+            vel.x = 0;
+
+        // Tentativa de sair no eixo Y
+        if ((posicaoAtualPlayer.y <= minY && vel.y < 0) || (posicaoAtualPlayer.y >= maxY && vel.y > 0))
+            vel.y = 0;
+
+        return vel;
     }
 }
