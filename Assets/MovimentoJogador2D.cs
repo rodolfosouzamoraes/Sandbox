@@ -39,6 +39,12 @@ public class MovimentoJogador2D : MonoBehaviour
         // Lê a direção horizontal (A/D ou setas)
         direcao = Input.GetAxisRaw("Horizontal");
 
+        // Vira o jogador para a direção do movimento
+        if (direcao != 0)
+        {
+            FlipPlayer(direcao);
+        }           
+
         // Verifica se está no chão usando Raycast
         VerificarChao();
 
@@ -63,6 +69,15 @@ public class MovimentoJogador2D : MonoBehaviour
 
             Invoke("PararDash", 0.15f); // Tempo curto do dash
         }
+    }
+
+    void FlipPlayer(float direcao)
+    {
+        transform.localScale = new Vector3(
+            Mathf.Sign(direcao), 
+            transform.localScale.y, 
+            transform.localScale.z
+        );
     }
 
     void PararDash()
