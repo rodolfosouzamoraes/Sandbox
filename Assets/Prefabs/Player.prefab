@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -331,7 +331,6 @@ MonoBehaviour:
   intervaloDisparo: 0.5
   somDisparo: {fileID: 8300000, guid: eef2b756d46bee747b0ce5b1f0bd19ab, type: 3}
   maximoProjetil: 20
-  projetilAtual: 0
 --- !u!1 &8911184605056806263
 GameObject:
   m_ObjectHideFlags: 0
