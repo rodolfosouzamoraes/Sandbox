@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class VidaJogador : MonoBehaviour
@@ -19,6 +20,12 @@ public class VidaJogador : MonoBehaviour
             vidaAtual = 0;
             Debug.Log("Jogador morreu!");
         }
+        barraDeVida.AtualizarBarra(vidaAtual, vidaMaxima);
+    }
+
+    public void RegenerarVida()
+    {
+        vidaAtual = vidaMaxima;
         barraDeVida.AtualizarBarra(vidaAtual, vidaMaxima);
     }
 
